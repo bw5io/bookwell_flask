@@ -25,6 +25,12 @@ class User(UserMixin, db.Model):
     def verify_password(self, password):
         return check_password_hash(self.password_hash,password)
 
+class SkillSet(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    skill = db.Column(db.String(100), nullable=False)
+    def __repr__(self):
+        return f"Skill Set('{self.skill}')"
+
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
