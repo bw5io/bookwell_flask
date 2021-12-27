@@ -10,7 +10,7 @@ class User(UserMixin, db.Model):
     password = db.Column(db.String(60), nullable=False)
     first_name = db.Column(db.String(80))
     last_name = db.Column(db.String(80))
-    mobile_phone = db.Column(db.String(11))
+    user_type = db.Column(db.Integer, nullable=False, default=0)
     def __repr__(self):
         return f"User('{self.username}', '{self.email}')"
 
