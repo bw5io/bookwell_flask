@@ -13,7 +13,7 @@ class User(UserMixin, db.Model):
     user_type = db.Column(db.Integer, nullable=False, default=0)
 
     skill = db.relationship('StaffCapability',backref='User',lazy=True)
-
+    timeslot = db.relationship('TimeSlotInventory', lazy=True)
     def __repr__(self):
         return f"User('{self.username}', '{self.email}')"
 
@@ -39,6 +39,14 @@ class StaffCapability(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     staff = db.Column(db.Integer, db.ForeignKey("user.id", ondelete="CASCADE"), nullable=False)
     skill = db.Column(db.Integer, db.ForeignKey("skill_set.id", ondelete="CASCADE"), nullable=False)
+
+class TimeSlotInventory(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    staff = db.Column(db.Integer, db.ForeignKey("user.id", ondelete="CASCADE"), nullable=False)
+    date = db.Column(db.Date, nullable=False)
+    startTime = db.Column(db.Time, nullable=False)
+    endTime = db.Column(db.Time, nullable=False)
+
 
 @login_manager.user_loader
 def load_user(user_id):
