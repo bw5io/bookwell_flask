@@ -6,13 +6,13 @@ from .. import db
 from ..models import SkillSet
 from .forms import *
 
-@admin.route('/list')
+@admin.route('/skill')
 def skill_list_view():
     skills=SkillSet.query.all()
     form=FormAddSkillSet()
     return render_template("admin/skill/list.html", skills=skills, form=form)
 
-@admin.route('/list/create', methods=['POST'])
+@admin.route('/skill/create', methods=['POST'])
 def skill_list_create():
     form=FormAddSkillSet()
     if form.validate_on_submit():
@@ -24,7 +24,7 @@ def skill_list_create():
         print("Error")
     return redirect(url_for('admin.skill_list_view'))
 
-@admin.route('/list/delete/<int:id>')
+@admin.route('/skill/delete/<int:id>')
 def skill_list_delete(id):
     skill=SkillSet.query.get_or_404(id)
     print(f"{skill.skill} in Deletion")
