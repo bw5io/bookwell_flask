@@ -23,4 +23,7 @@ app.register_blueprint(admin_blueprint, url_prefix="/admin")
 from .auth import auth as auth_blueprint
 app.register_blueprint(auth_blueprint, url_prefix="/auth")
 
+from .staff import staff as staff_blueprint
+app.register_blueprint(staff_blueprint, url_prefix="/staff")
+
 from .models import *
