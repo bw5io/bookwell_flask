@@ -10,7 +10,7 @@
 {% for i in skills %}
 <tr>
     <td>{{i.skill}}</td>
-    <td></td>
+    <td>{{i.staff|length}}</td>
     <td><a href="{{url_for('admin.skill_list_delete', id=i.id)}}">Delete</a></td>
 </tr>
 {% endfor %}
