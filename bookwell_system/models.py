@@ -11,6 +11,9 @@ class User(UserMixin, db.Model):
     first_name = db.Column(db.String(80))
     last_name = db.Column(db.String(80))
     user_type = db.Column(db.Integer, nullable=False, default=0)
+
+    skill = db.relationship('StaffCapability',backref='User',lazy=True)
+
     def __repr__(self):
         return f"User('{self.username}', '{self.email}')"
 
@@ -28,8 +31,14 @@ class User(UserMixin, db.Model):
 class SkillSet(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     skill = db.Column(db.String(100), nullable=False)
+    staff = db.relationship('StaffCapability',backref='SkillSet',lazy=True)
     def __repr__(self):
         return f"Skill Set('{self.skill}')"
+
+class StaffCapability(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    staff = db.Column(db.Integer, db.ForeignKey("user.id", ondelete="CASCADE"), nullable=False)
+    skill = db.Column(db.Integer, db.ForeignKey("skill_set.id", ondelete="CASCADE"), nullable=False)
 
 @login_manager.user_loader
 def load_user(user_id):
