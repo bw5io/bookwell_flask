@@ -1,0 +1,24 @@
+{% extends "common.html" %} 
+{% block content %}
+<h2>Current Skillsets</h2>
+<table class="table">
+    <tr>
+        <th>Skill</th>
+        <th>TA Numbers</th>
+        <th>Action</th>
+    </tr>
+{% for i in skills %}
+<tr>
+    <td>{{i.skill}}</td>
+    <td>{{i.staff|length}}</td>
+    <td><a href="{{url_for('admin.skill_list_delete', id=i.id)}}">Delete</a></td>
+</tr>
+{% endfor %}
+</table>
+<h2>Add New Skillset</h2>
+<form action="{{url_for('admin.skill_list_create')}}" method="post">
+    {{form.csrf_token}}
+    <p class="form">{{form.skill.label(class_="lb")}}{{form.skill()}}</p>
+    {{form.submit(class_="btn")}}
+</form>
+{% endblock content %}

@@ -1,0 +1,8 @@
+from flask import flash
+
+def flash_errors(form):
+    """Flashes form errors"""
+    for _, errors in form.errors.items():
+        for error in errors:
+            flash( (error), 'error')
+

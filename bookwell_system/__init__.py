@@ -1,7 +1,7 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
-from flask_admin import Admin
+from flask_migrate import Migrate
 import os
 
 app = Flask(__name__)   
@@ -9,16 +9,21 @@ app.config['SECRET_KEY']=os.environ.get("SECRET_KEY")
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URI")
 
 db = SQLAlchemy(app)
+migrate = Migrate(app, db)
 
 login_manager = LoginManager()
 login_manager.init_app(app)
 
+from .main import main as main_blueprint
+app.register_blueprint(main_blueprint)
 
-from . import routes
-from .models import User, Post, Comment
-from .views import AdminView
+from .admin import admin as admin_blueprint
+app.register_blueprint(admin_blueprint, url_prefix="/admin")
 
-admin = Admin(app, name='Admin panel', template_mode='bootstrap3')
-admin.add_view(AdminView(User, db.session)) 
-admin.add_view(AdminView(Post, db.session)) 
-admin.add_view(AdminView(Comment, db.session))
+from .auth import auth as auth_blueprint
+app.register_blueprint(auth_blueprint, url_prefix="/auth")
+
+from .staff import staff as staff_blueprint
+app.register_blueprint(staff_blueprint, url_prefix="/staff")
+
+from .models import *
