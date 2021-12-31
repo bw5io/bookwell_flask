@@ -1,0 +1,17 @@
+{% extends 'common.html' %}
+{% block content %}
+
+<div>
+    <h2>Create Timeslots</h2>
+    <form action="" method="post">
+        {{form.csrf_token}}
+        <p>{{form.date.label(class_="lb")}}{{form.date(class_="inputline")}}</p>
+        <p>{{form.start_time.label(class_="lb")}}{{form.start_time(class_="inputline")}}</p>
+        <p>{{form.end_time.label(class_="lb")}}{{form.end_time(class_="inputline")}}</p>
+        {{form.submit(class_="btn")}}
+    </form>
+    <a href="{{url_for('staff.timeslot_create')}}">Create</a>
+</div>
+
+
+{% endblock %}
