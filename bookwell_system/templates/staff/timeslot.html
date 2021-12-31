@@ -1,0 +1,49 @@
+{% extends 'common.html' %}
+{% block content %}
+
+<div>
+    <h2>Available Timeslots</h2>
+    <table class="table">
+        <tr>
+            <th>Date</th>
+            <th>Start</th>
+            <th>End</th>
+            <th>Action</th>
+        </tr>
+        {% for slot in timeslots %}
+        <tr>
+            <td>{{slot.date}}</th>
+            <td>{{slot.startTime}}</td>
+            <td>{{slot.endTime}}</td>
+            <td><a href="{{url_for('staff.timeslot_delete', id=slot.id)}}">Delete</a></td>
+        </tr>
+        {% endfor %}
+    </table>
+    <a href="{{url_for('staff.timeslot_create')}}">Create</a>
+</div>
+<div>
+    <h2>Booked Meetings</h2>
+    <table class="table">
+        <tr>
+            <th>Date</th>
+            <th>Start</th>
+            <th>End</th>
+            <th>Skill</th>
+            <th>Action</th>
+        </tr>
+        {% for meeting in meetings %}
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>{{meeting.skill.skill}}</td>
+            <td>
+                <p> <a href="#">Detail</a></p>
+                <p><a href="#"}>Delete</a></p>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+
+{% endblock %}
