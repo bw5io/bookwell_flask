@@ -6,6 +6,7 @@ from . import auth
 from .. import db
 from ..models import User
 from .forms import RegistrationForm, LoginForm
+from ..functions import flash_errors
 
 @auth.route("/register", methods=['GET','POST'])
 def register():
@@ -24,7 +25,7 @@ def register():
             return redirect(url_for('main.home'))
         return redirect(next or url_for('main.home'))
     else:
-        pass
+        flash_errors(form)
     return render_template('auth/register.html', title='Register', form=form)
 
 
@@ -43,7 +44,7 @@ def login():
         else:
             flash("Email or Password incorrect.")
     else:
-        pass
+        flash_errors(form)
     return render_template('auth/login.html', title='Login', form=form)
 
 @auth.route("/logout")
