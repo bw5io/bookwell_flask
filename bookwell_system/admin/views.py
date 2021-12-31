@@ -5,6 +5,7 @@ from . import admin
 from .. import db
 from ..models import SkillSet
 from .forms import *
+from ..functions import flash_errors
 
 @admin.route('/skill')
 def skill_list_view():
@@ -21,7 +22,7 @@ def skill_list_create():
         db.session.commit()
         print("Skill Set Added")
     else:
-        print("Error")
+        flash_errors(form)
     return redirect(url_for('admin.skill_list_view'))
 
 @admin.route('/skill/delete/<int:id>')
