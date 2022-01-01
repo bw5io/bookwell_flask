@@ -64,6 +64,7 @@ class Meeting(db.Model):
     allowJoining = db.Column(db.Boolean, nullable=False, default=False)
     consentToRecording = db.Column(db.Boolean, nullable=False, default=False)
     owner = db.Column(db.Integer, db.ForeignKey("user.id", ondelete="CASCADE"), nullable=False)
+    actualTime = db.Column(db.Integer)
     
     meetingSlots = db.relationship('MeetingSlots', lazy=True, backref="Meeting")
     meetingJoiners = db.relationship('MeetingJoiners', lazy=True, backref="Meeting")
