@@ -11,7 +11,7 @@ from ..models import TimeSlotInventory, User, StaffCapability, SkillSet, Meeting
 from ..functions import flash_errors
 from .forms import FormMeetingDetail
 
-@student.route("/booking")
+@student.route("/booking/step1")
 def booking_step_1():
     skills = SkillSet.query.all()
     return render_template("/student/booking_1.html", skills=skills)
@@ -30,7 +30,7 @@ def booking_step_3():
     timeslots = TimeSlotInventory.query.filter_by(staff=staff_id, occupied=False).all()
     return render_template("/student/booking_3.html", timeslots=timeslots, skill=skill_id, staff=staff_id)
 
-@student.route("booking/step4")
+@student.route("/booking/step4")
 def booking_step_4():
     skill_id = request.args.get("skill")
     staff_id = request.args.get("staff")
@@ -53,14 +53,15 @@ def booking_step_4():
     db.session.add(meeting_joiner)
     db.session.commit()
     flash("Your timeslot has been booked.")
-    return redirect(url_for("student.booking_detail", id=new_meeting.id))
+    return redirect(url_for("student.booking_detail_edit", id=new_meeting.id))
 
-@student.route("booking/detail/edit", methods=["POST", "GET"])
-def booking_detail():
+@student.route("/booking/detail/edit", methods=["POST", "GET"])
+def booking_detail_edit():
     meeting_id=request.args.get("id")
     meeting=Meeting.query.get_or_404(meeting_id)
     if meeting.owner!=current_user.id:
-        abort(403)
+        flash("You have no access to modify this meeting.")
+        return redirect(url_for("student.booking_detail", id=meeting_id))
     form=FormMeetingDetail()
     if request.method=='GET':
         form.allowJoining.data = meeting.allowJoining
@@ -74,4 +75,16 @@ def booking_detail():
         meeting.meetingPlace = form.meetingPlace.data
         db.session.commit()
         flash("Detail has been saved.")
-    return render_template("/student/booking_detail.html", form=form, meeting=meeting)
+        return redirect(url_for("student.booking_detail", id=meeting_id))
+    return render_template("/student/booking_edit_detail.html", form=form, meeting=meeting)
+
+@student.route("/booking")
+def booking_list():
+    meetings=current_user.meetingjoiners
+    return render_template("/student/booking_list.html", meetings=meetings)
+
+@student.route("/booking/detail")
+def booking_detail():
+    meeting_id=request.args.get("id")
+    meeting=Meeting.query.get_or_404(meeting_id)
+    return render_template("/student/booking_detail.html", meeting=meeting, id=meeting_id)

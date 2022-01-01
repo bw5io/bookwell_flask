@@ -8,6 +8,7 @@
             <th>Date</th>
             <th>Start</th>
             <th>End</th>
+            <th>Booked?</th>
             <th>Action</th>
         </tr>
         {% for slot in timeslots %}
@@ -15,6 +16,7 @@
             <td>{{slot.date}}</th>
             <td>{{slot.startTime}}</td>
             <td>{{slot.endTime}}</td>
+            <td>{{slot.occupied}}</td>
             <td><a href="{{url_for('staff.timeslot_delete', id=slot.id)}}">Delete</a></td>
         </tr>
         {% endfor %}
@@ -33,10 +35,10 @@
         </tr>
         {% for meeting in meetings %}
         <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td>{{meeting.skill.skill}}</td>
+            <td>{{meeting.meetingSlots[0].slotinfo.date}}</td>
+            <td>{{meeting.meetingSlots[0].slotinfo.startTime}}</td>
+            <td>{{meeting.meetingSlots[0].slotinfo.endTime}}</td>
+            <td>{{meeting.SkillSet.skill}}</td>
             <td>
                 <p> <a href="#">Detail</a></p>
                 <p><a href="#"}>Delete</a></p>
