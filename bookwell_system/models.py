@@ -35,7 +35,7 @@ class SkillSet(db.Model):
     skill = db.Column(db.String(100), nullable=False)
 
     staff = db.relationship('StaffCapability',backref='SkillSet',lazy=True)
-    meetings = db.relationship('Meeting', lazy=True)
+    meetings = db.relationship('Meeting',backref='SkillSet', lazy=True)
 
     def __repr__(self):
         return f"Skill Set('{self.skill}')"
@@ -64,7 +64,7 @@ class Meeting(db.Model):
     allowJoining = db.Column(db.Boolean, nullable=False, default=False)
     consentToRecording = db.Column(db.Boolean, nullable=False, default=False)
     owner = db.Column(db.Integer, db.ForeignKey("user.id", ondelete="CASCADE"), nullable=False)
-
+    
     meetingSlots = db.relationship('MeetingSlots', lazy=True, backref="Meeting")
     meetingJoiners = db.relationship('MeetingJoiners', lazy=True, backref="Meeting")
     ownerUser = db.relationship('User', backref='ownedMeetings', foreign_keys=[owner])
