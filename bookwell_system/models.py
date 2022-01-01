@@ -14,7 +14,6 @@ class User(UserMixin, db.Model):
 
     skill = db.relationship('StaffCapability',backref='User',lazy=True)
     timeslots = db.relationship('TimeSlotInventory', lazy=True)
-    meetings = db.relationship('Meeting', lazy=True)
     meetingjoiners = db.relationship('MeetingJoiners', lazy=True)
 
     def __repr__(self):
@@ -54,7 +53,7 @@ class TimeSlotInventory(db.Model):
     endTime = db.Column(db.Time, nullable=False)
     occupied = db.Column(db.Boolean, nullable=False, default=False)
 
-    meetingSlots = db.relationship('MeetingSlots', lazy=True)
+    meetingSlots = db.relationship('MeetingSlots', lazy=True, backref="slotinfo")
 
 class Meeting(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -64,9 +63,12 @@ class Meeting(db.Model):
     topic = db.Column(db.String(500))
     allowJoining = db.Column(db.Boolean, nullable=False, default=False)
     consentToRecording = db.Column(db.Boolean, nullable=False, default=False)
+    owner = db.Column(db.Integer, db.ForeignKey("user.id", ondelete="CASCADE"), nullable=False)
 
     meetingSlots = db.relationship('MeetingSlots', lazy=True, backref="Meeting")
     meetingJoiners = db.relationship('MeetingJoiners', lazy=True, backref="Meeting")
+    ownerUser = db.relationship('User', backref='ownedMeetings', foreign_keys=[owner])
+    staffUser = db.relationship('User', backref='staffMeetings', foreign_keys=[staff])
 
 class MeetingSlots(db.Model):
     id = db.Column(db.Integer, primary_key=True)
