@@ -1,0 +1,17 @@
+{% extends 'common.html' %}
+{% block content %}
+
+<div>
+    <h2>Meeting Detail</h2>
+    <form action="" method="post">
+        {{form.csrf_token}}
+        <p>{{form.topic.label(class_="lb")}}{{form.topic(class_="inputline")}}</p>
+        <p>{{form.meetingPlace.label(class_="lb")}}{{form.meetingPlace(class_="inputline")}}</p>
+        <p>{{form.allowJoining.label(class_="lb")}}{{form.allowJoining(class_="inputline")}}</p>
+        <p>{{form.consentToRecording.label(class_="lb")}}{{form.consentToRecording(class_="inputline")}}</p>
+        {{form.submit(class_="btn")}}
+    </form>
+</div>
+
+
+{% endblock %}
