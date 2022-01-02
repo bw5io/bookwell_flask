@@ -1,5 +1,25 @@
 {% extends 'common.html' %}
 {% block content %}
+<h2>Join existing meeting</h2>
+<table>
+    <tr>
+        <th>Topic</th>
+        <th>Date</th>
+        <th>Start Time</th>
+        <th>End Time</th>
+        <th>Action</th>
+    </tr>
+    {% for meeting in public_meeting %}
+    <tr>
+        <td>{{ meeting.topic }}</td>
+        <td>{{meeting.meetingSlots[0].slotinfo.date}}</td>
+        <td>{{meeting.meetingSlots[0].slotinfo.startTime}}</td>
+        <td>{{meeting.meetingSlots[0].slotinfo.endTime}}</td>
+        <td><a href="{{url_for('student.booking_join', id=meeting.id)}}">Join</a></td>
+    </tr>
+    {%endfor%}
+</table>
+<h2>Find a tutor</h2>
 <table class="table"> 
     <tr>
         <th>Staff</th>

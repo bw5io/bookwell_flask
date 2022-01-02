@@ -20,7 +20,8 @@ def booking_step_1():
 def booking_step_2():
     skill_id = request.args.get("skill")
     staff = SkillSet.query.get(skill_id).staff
-    return render_template("/student/booking_2.html", staff=staff, skill=skill_id)
+    public_meeting = Meeting.query.filter_by(skill=skill_id, allowJoining=True).all()
+    return render_template("/student/booking_2.html", staff=staff, skill=skill_id, public_meeting=public_meeting)
 
     
 @student.route("/booking/step3")
@@ -88,3 +89,18 @@ def booking_detail():
     meeting_id=request.args.get("id")
     meeting=Meeting.query.get_or_404(meeting_id)
     return render_template("/student/booking_detail.html", meeting=meeting, id=meeting_id)
+
+
+@student.route("booking/join")
+def booking_join():
+    meeting_id=request.args.get("id")
+    meeting = Meeting.query.get_or_404(meeting_id)
+    validate = MeetingJoiners.query.filter_by(meeting=meeting_id, student=current_user.id).all()
+    print(validate)
+    if validate or meeting.allowJoining!=True:
+        return abort(403)
+    newLog = MeetingJoiners(meeting=meeting_id, student=current_user.id)
+    db.session.add(newLog)
+    db.session.commit()
+    flash("You've registered for the meeting.")
+    return redirect(url_for("student.booking_list"))

@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from flask_login import current_user
-from wtforms import StringField, PasswordField, SubmitField, TextAreaField
+from wtforms import StringField, PasswordField, SubmitField, TextAreaField, IntegerField
 from wtforms.fields.html5 import DateField, TimeField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError, Regexp, InputRequired
 from ..models import TimeSlotInventory
@@ -20,3 +20,7 @@ class FormAddTimeSlot(FlaskForm):
         data=TimeSlotInventory.query.filter_by(staff=current_user.id, date=date.data).first()
         if data:
             raise ValidationError("Time slots have already been created for that date.")
+
+class FormActualTime(FlaskForm):
+    actual_time = IntegerField("Actual Time")
+    submit = SubmitField('Submit')
