@@ -13,6 +13,17 @@
     </title>
 </head>
 <body>
+    {% with messages = get_flashed_messages() %}
+    {%if messages%}
+    <div id="flash">
+            <ul class="flashes">
+                {%for message in messages%}
+                <li><strong>{{message}}</strong></li>
+                {%endfor%}
+            </ul>
+    </div>
+    {%endif%}
+    {%endwith%}
     <div id="navi" class="navibar">
         <h1>Bookwell</h1>
         <ul>

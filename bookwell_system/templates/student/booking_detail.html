@@ -1,0 +1,48 @@
+{% extends 'common.html' %}
+{% block content %}
+
+<div>
+    <h2>Meeting Detail</h2>
+    <table>
+
+        <tr>
+            <td>Owner</td>
+            <td>{{meeting.ownerUser.first_name}}</td>
+        </tr>
+        <tr>
+            <td>Date</td>
+            <td>{{meeting.meetingSlots[0].slotinfo.date}}</td>
+        </tr>
+        <tr>
+            <td>Start</td>
+            <td>{{meeting.meetingSlots[0].slotinfo.startTime}}</td>
+        </tr>
+        <tr>
+            <td>End</td>
+            <td>{{meeting.meetingSlots[0].slotinfo.endTime}}</td>
+        </tr>
+        <tr>
+            <td>Skill</td>
+            <td>{{meeting.SkillSet.skill}}</td>
+        </tr>
+        <tr>
+            <td>Topic</td>
+            <td>{{meeting.topic}}</td>
+        </tr>
+        <tr>
+            <td>Meeting Place</td>
+            <td>{{meeting.meetingPlace}}</td>
+        </tr>
+        <tr>
+            <td>Staff</td>
+            <td>{{meeting.staffUser.first_name}}</td>
+        </tr>
+        <tr>
+            <td><a href="{{url_for('student.booking_detail_edit', id=meeting.id)}}">Edit</a></td>
+            <td></td>
+        </tr>
+    </table>
+</div>
+
+
+{% endblock %}
