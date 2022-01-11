@@ -11,7 +11,7 @@
 <tr>
     <td>{{i.skill}}</td>
     <td>{{i.staff|length}}</td>
-    <td><a href="{{url_for('admin.skill_list_delete', id=i.id)}}">Delete</a></td>
+    <td>{% if i.staff|length==0 %}<a href="{{url_for('admin.skill_list_delete', id=i.id)}}">Delete</a>{%endif%}</td>
 </tr>
 {% endfor %}
 </table>
