@@ -40,7 +40,7 @@
             <td>{{meeting.meetingSlots[0].slotinfo.endTime}}</td>
             <td>{{meeting.SkillSet.skill}}</td>
             <td>
-                <p> <a href="#">Detail</a></p>
+                <p> <a href="{{url_for('staff.timeslot_detail', id=meeting.id)}}">Detail</a></p>
                 <p><a href="#"}>Delete</a></p>
             </td>
         </tr>

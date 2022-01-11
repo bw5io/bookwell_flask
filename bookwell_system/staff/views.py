@@ -4,7 +4,7 @@ from is_safe_url import is_safe_url
 from flask import abort
 
 import datetime
-from .forms import FormAddTimeSlot
+from .forms import FormActualTime, FormAddTimeSlot
 
 from . import staff
 from .. import db
@@ -71,3 +71,23 @@ def timeslot_delete():
     print("Deleted.")
     flash("Timeslot deleted.")
     return redirect(url_for('staff.timeslot_view'))
+
+@staff.route("/timeslot/detail")
+def timeslot_detail():
+    form=FormActualTime()
+    meeting_id=request.args.get("id")
+    meeting=Meeting.query.get_or_404(meeting_id)
+    return render_template("staff/meeting_detail.html", meeting=meeting, id=meeting_id, form=form)
+
+@staff.route("/timeslot/actualtime", methods=["POST"])
+def timeslot_actual_time_input():
+    form=FormActualTime()
+    id=request.args.get('id')
+    meeting=Meeting.query.get_or_404(id)
+    if meeting.staff!=current_user.id:
+        abort(403)
+    if form.validate_on_submit():
+        meeting.actualTime=form.actual_time.data
+        db.session.commit()
+        flash("Actual time updated.")
+    return redirect(url_for('staff.timeslot_detail', id=id))
