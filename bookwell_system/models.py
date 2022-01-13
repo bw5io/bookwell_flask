@@ -2,6 +2,13 @@ from . import db
 from . import login_manager
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
+
+class Permission:
+    ADMIN = 1
+    TEACHER = 2
+    STAFF = 4
+    STUDENT = 8
+
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(15), unique=True, nullable=False)
@@ -11,6 +18,7 @@ class User(UserMixin, db.Model):
     first_name = db.Column(db.String(80))
     last_name = db.Column(db.String(80))
     user_type = db.Column(db.Integer, nullable=False, default=0)
+    permission = db.Column(db.Integer, default=8)
 
     skill = db.relationship('StaffCapability',backref='User',lazy=True)
     timeslots = db.relationship('TimeSlotInventory', lazy=True)
@@ -30,6 +38,20 @@ class User(UserMixin, db.Model):
     def verify_password(self, password):
         return check_password_hash(self.password_hash,password)
 
+    def add_permission(self, perm):
+        if not self.has_permission(perm):
+            self.permissions += perm
+
+    def remove_permission(self, perm):
+        if self.has_permission(perm):
+            self.permissions -= perm
+    
+    def reset_permissions(self):
+        self.permissions = 0
+    
+    def has_permission(self, perm):
+        return self.permission & perm == perm
+        
 class SkillSet(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     skill = db.Column(db.String(100), nullable=False)
