@@ -5,18 +5,22 @@ from flask import abort
 
 import datetime
 
+from ..decorators import permission_required
+
 from . import student
 from .. import db
-from ..models import TimeSlotInventory, User, StaffCapability, SkillSet, Meeting, MeetingSlots, MeetingJoiners
+from ..models import Permission, TimeSlotInventory, User, StaffCapability, SkillSet, Meeting, MeetingSlots, MeetingJoiners
 from ..functions import flash_errors
 from .forms import FormMeetingDetail
 
 @student.route("/booking/step1")
+@permission_required(Permission.STUDENT)
 def booking_step_1():
     skills = SkillSet.query.all()
     return render_template("/student/booking_1.html", skills=skills)
 
 @student.route("/booking/step2")
+@permission_required(Permission.STUDENT)
 def booking_step_2():
     skill_id = request.args.get("skill")
     staff = SkillSet.query.get(skill_id).staff
@@ -25,6 +29,7 @@ def booking_step_2():
 
     
 @student.route("/booking/step3")
+@permission_required(Permission.STUDENT)
 def booking_step_3():
     skill_id = request.args.get("skill")
     staff_id = request.args.get("staff")
@@ -32,6 +37,7 @@ def booking_step_3():
     return render_template("/student/booking_3.html", timeslots=timeslots, skill=skill_id, staff=staff_id)
 
 @student.route("/booking/step4")
+@permission_required(Permission.STUDENT)
 def booking_step_4():
     skill_id = request.args.get("skill")
     staff_id = request.args.get("staff")
@@ -57,6 +63,7 @@ def booking_step_4():
     return redirect(url_for("student.booking_detail_edit", id=new_meeting.id))
 
 @student.route("/booking/detail/edit", methods=["POST", "GET"])
+@permission_required(Permission.STUDENT)
 def booking_detail_edit():
     meeting_id=request.args.get("id")
     meeting=Meeting.query.get_or_404(meeting_id)
@@ -80,11 +87,13 @@ def booking_detail_edit():
     return render_template("/student/booking_edit_detail.html", form=form, meeting=meeting)
 
 @student.route("/booking")
+@permission_required(Permission.STUDENT)
 def booking_list():
     meetings=current_user.meetingjoiners
     return render_template("/student/booking_list.html", meetings=meetings)
 
 @student.route("/booking/detail")
+@permission_required(Permission.STUDENT)
 def booking_detail():
     meeting_id=request.args.get("id")
     meeting=Meeting.query.get_or_404(meeting_id)
@@ -92,6 +101,7 @@ def booking_detail():
 
 
 @student.route("booking/join")
+@permission_required(Permission.STUDENT)
 def booking_join():
     meeting_id=request.args.get("id")
     meeting = Meeting.query.get_or_404(meeting_id)

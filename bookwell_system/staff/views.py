@@ -4,14 +4,17 @@ from is_safe_url import is_safe_url
 from flask import abort
 
 import datetime
+
+from ..decorators import permission_required
 from .forms import FormActualTime, FormAddTimeSlot
 
 from . import staff
 from .. import db
-from ..models import TimeSlotInventory, User, StaffCapability, SkillSet, Meeting
+from ..models import Permission, TimeSlotInventory, User, StaffCapability, SkillSet, Meeting
 from ..functions import flash_errors
 
 @staff.route("/skills")
+@permission_required(Permission.STAFF)
 def skill_list_view():
     skills=SkillSet.query.all()
     current_skills=StaffCapability.query.filter_by(staff=current_user.id).all()
@@ -19,6 +22,7 @@ def skill_list_view():
     return render_template('staff/skills.html', title='Skill Selection', skills=skills, current=current_skill_list)
 
 @staff.route("/skills/toggle")
+@permission_required(Permission.STAFF)
 def skill_list_toggle():
     next=request.args.get('skill')
     skill=StaffCapability.query.filter_by(staff=current_user.id, skill=next)
@@ -33,12 +37,14 @@ def skill_list_toggle():
     return redirect(url_for("staff.skill_list_view"))
 
 @staff.route("/timeslot")
+@permission_required(Permission.STAFF)
 def timeslot_view():
     timeslots=TimeSlotInventory.query.filter_by(staff=current_user.id)
     meetings=Meeting.query.filter_by(staff=current_user.id)
     return render_template('staff/timeslot.html', title='Time Slot Management', timeslots=timeslots, meetings=meetings)
 
 @staff.route("/timeslot/create", methods=["POST", "GET"])
+@permission_required(Permission.STAFF)
 def timeslot_create():
     form=FormAddTimeSlot()
     if form.validate_on_submit():
@@ -60,6 +66,7 @@ def timeslot_create():
     return render_template('staff/timeslot_create.html', title='Time Slot Creation', form=form)
 
 @staff.route("/timeslot/delete")
+@permission_required(Permission.STAFF)
 def timeslot_delete():
     id=request.args.get('id')
     slot=TimeSlotInventory.query.get_or_404(id)
@@ -73,6 +80,7 @@ def timeslot_delete():
     return redirect(url_for('staff.timeslot_view'))
 
 @staff.route("/timeslot/detail")
+@permission_required(Permission.STAFF)
 def timeslot_detail():
     form=FormActualTime()
     meeting_id=request.args.get("id")
@@ -80,6 +88,7 @@ def timeslot_detail():
     return render_template("staff/meeting_detail.html", meeting=meeting, id=meeting_id, form=form)
 
 @staff.route("/timeslot/actualtime", methods=["POST"])
+@permission_required(Permission.STAFF)
 def timeslot_actual_time_input():
     form=FormActualTime()
     id=request.args.get('id')

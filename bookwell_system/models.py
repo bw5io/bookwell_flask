@@ -18,7 +18,6 @@ class User(UserMixin, db.Model):
     first_name = db.Column(db.String(80))
     last_name = db.Column(db.String(80))
     user_type = db.Column(db.Integer, nullable=False, default=0)
-    permission = db.Column(db.Integer, default=8)
 
     skill = db.relationship('StaffCapability',backref='User',lazy=True)
     timeslots = db.relationship('TimeSlotInventory', lazy=True)
@@ -40,18 +39,18 @@ class User(UserMixin, db.Model):
 
     def add_permission(self, perm):
         if not self.has_permission(perm):
-            self.permissions += perm
+            self.user_type += perm
 
     def remove_permission(self, perm):
         if self.has_permission(perm):
-            self.permissions -= perm
+            self.user_type -= perm
     
     def reset_permissions(self):
-        self.permissions = 0
+        self.user_type = 0
     
     def has_permission(self, perm):
-        return self.permission & perm == perm
-        
+        return self.user_type & perm == perm
+
 class SkillSet(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     skill = db.Column(db.String(100), nullable=False)
