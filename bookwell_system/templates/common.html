@@ -1,3 +1,6 @@
+{% from 'bootstrap5/nav.html' import render_nav_item %}
+{% from 'bootstrap5/utils.html' import render_messages %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,37 +14,48 @@
         My Damn Fine Website
         {%endif%}
     </title>
+    {% block head %}
+    {% endblock %}
+    {{ bootstrap.load_css() }}
 </head>
 <body>
-    {% with messages = get_flashed_messages() %}
-    {%if messages%}
-    <div id="flash">
-            <ul class="flashes">
-                {%for message in messages%}
-                <li><strong>{{message}}</strong></li>
-                {%endfor%}
-            </ul>
-    </div>
-    {%endif%}
-    {%endwith%}
-    <div id="navi" class="navibar">
-        <h1>Bookwell</h1>
-        <ul>
-            {%if current_user.is_authenticated%}
-            <li>Welcome, {{current_user.username}}!</li>
-            <li><a href="{{url_for('auth.logout',next=request.path)}}">Log Out</a></li>
-        {%else%}
-            <li>Welcome, Guest!</li>
-            <li><a href="{{ url_for('auth.register',next=request.path) }}">Register</a></li>
-            <li><a href="{{ url_for('auth.login',next=request.path )}}">Log In</a></li>
-        {%endif%}
-
-
+    <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
+        <a href="/" class="d-flex align-items-center col-md-3 mb-2 mb-md-0 text-dark text-decoration-none">
+            <h4>Bookwell</h1>
+        </a>
+  
+        <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
+          <!-- <li><a href="#" class="nav-link px-2 link-secondary">Home</a></li>
+          <li><a href="#" class="nav-link px-2 link-dark">Features</a></li>
+          <li><a href="#" class="nav-link px-2 link-dark">Pricing</a></li>
+          <li><a href="#" class="nav-link px-2 link-dark">FAQs</a></li>
+          <li><a href="#" class="nav-link px-2 link-dark">About</a></li> -->
         </ul>
-    </div>
-    <div id="main">
-        {% block content %} {% endblock content%}
+  
+        <div class="col-md-3 text-end">
+            {%if current_user.is_authenticated%}
+            <button type="button" class="btn btn-outline-primary me-2" onClick="window.location.href='{{ url_for("auth.logout",next=request.path )}}';">Log Out</button>
+            {%else%}
+            <button type="button" class="btn btn-outline-primary me-2" onClick="window.location.href='{{ url_for('auth.login',next=request.path) }}';">Login</button>
+            <button type="button" class="btn btn-primary" onClick="window.location.href='{{ url_for('auth.register',next=request.path )}}';">Register</button>
+        {%endif%}
+        </div>
+      </header>
+    <main class="container">
+        {{ render_messages(container=False, dismissible=True) }}
+        {% block content %}
+        {% endblock content %}
+    </main>
 
-    </div>
+    <footer class="text-center">
+        {% block footer %}
+            <small> This is a test.
+            </small>
+        {% endblock %}
+    </footer>
+
+    {%block scripts%}
+    {%endblock%}
+    {{ bootstrap.load_js() }}
 </body>
 </html>
