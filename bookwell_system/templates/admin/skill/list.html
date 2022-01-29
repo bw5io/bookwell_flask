@@ -1,3 +1,4 @@
+{% from 'bootstrap5/form.html' import render_form %}
 {% extends "common.html" %} 
 {% block content %}
 <h2>Current Skillsets</h2>
@@ -16,9 +17,5 @@
 {% endfor %}
 </table>
 <h2>Add New Skillset</h2>
-<form action="{{url_for('admin.skill_list_create')}}" method="post">
-    {{form.csrf_token}}
-    <p class="form">{{form.skill.label(class_="lb")}}{{form.skill()}}</p>
-    {{form.submit(class_="btn")}}
-</form>
+{{ render_form(form) }}
 {% endblock content %}

@@ -41,6 +41,7 @@
             <td>Actual Time</td>
             <td>
                 {{meeting.actualTime}}
+                {{ render_form(form, action=url_for('staff.timeslot_actual_time_input', id=id)) }}
                 <form action="{{url_for('staff.timeslot_actual_time_input', id=id)}}" method="post">
                     {{form.csrf_token}}
                     {{form.actual_time}}
