@@ -6,7 +6,6 @@ from flask import abort
 import datetime
 
 from ..decorators import permission_required
-
 from . import student
 from .. import db
 from ..models import Permission, TimeSlotInventory, User, StaffCapability, SkillSet, Meeting, MeetingSlots, MeetingJoiners
@@ -27,7 +26,6 @@ def booking_step_2():
     public_meeting = Meeting.query.filter_by(skill=skill_id, allowJoining=True).all()
     return render_template("/student/booking_2.html", staff=staff, skill=skill_id, public_meeting=public_meeting)
 
-    
 @student.route("/booking/step3")
 @permission_required(Permission.STUDENT)
 def booking_step_3():
@@ -51,7 +49,7 @@ def booking_step_4():
         flash("Timeslot has been taken or invalid input, please retry.")
         return redirect(url_for("student.booking_step_1"))
     timeslot.occupied=True
-    new_meeting = Meeting(skill=skill_id, staff=staff_id)
+    new_meeting = Meeting(skill=skill_id, staff=staff_id, owner=current_user.id)
     db.session.add(new_meeting)
     db.session.commit()
     new_meeting_slot = MeetingSlots(meeting=new_meeting.id, timeslot=timeslot_id)
@@ -98,7 +96,6 @@ def booking_detail():
     meeting_id=request.args.get("id")
     meeting=Meeting.query.get_or_404(meeting_id)
     return render_template("/student/booking_detail.html", meeting=meeting, id=meeting_id)
-
 
 @student.route("booking/join")
 @permission_required(Permission.STUDENT)
