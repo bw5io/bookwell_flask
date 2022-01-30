@@ -4,6 +4,9 @@ from flask_login import LoginManager
 from flask_migrate import Migrate
 from flask_bootstrap import Bootstrap5
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = Flask(__name__)   
 app.config['SECRET_KEY']=os.environ.get("SECRET_KEY")
