@@ -3,7 +3,7 @@ from flask_login import login_user, logout_user, login_required, current_user
 
 from . import admin
 from .. import db
-from ..models import SkillSet, Permission
+from ..models import SkillSet, Permission, TimeSlotInventory
 from .forms import *
 from ..functions import flash_errors
 from ..decorators import permission_required
@@ -39,3 +39,9 @@ def skill_list_delete(id):
     db.session.commit()
     print("Deleted.")
     return redirect(url_for('admin.skill_list_view'))
+
+# @admin.route('/dashboard')
+# @permission_required(Permission.ADMIN)
+# def dashboard_view():
+#     next_week_slots=TimeSlotInventory.query.filter()
+#     return None
