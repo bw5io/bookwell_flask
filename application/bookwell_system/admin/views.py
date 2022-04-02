@@ -42,10 +42,31 @@ def skill_list_delete(id):
     print("Deleted.")
     return redirect(url_for('admin.skill_list_view'))
 
+class stat_occupied_or_not:
+    count = 0
+    occupied = 0
+    def __repr__(self):
+        return f"All: {self.count}, Occupied: {self.occupied}"
+
 @admin.route('/dashboard')
 @permission_required(Permission.ADMIN)
 def dashboard_view():
-    day = datetime.now()+timedelta(days=7)
+    try:
+        day = datetime.strptime(request.args.get('date'),"%d-%m-%Y") if request.args.get('date') else datetime.now()+timedelta(days=7)
+    except:
+        day = datetime.now()+timedelta(days=7)
     start_date, end_date = get_week(day)
-    this_week_slots=TimeSlotInventory.query.filter(and_(TimeSlotInventory.date>=start_date, TimeSlotInventory.date<= end_date))
-    return str([(i.staff, i.date, i.startTime) for i in this_week_slots.all()])
+    this_week_slots=TimeSlotInventory.query.filter(and_(TimeSlotInventory.date>=start_date, TimeSlotInventory.date<= end_date)).all()
+    by_date, by_staff = {}, {}
+    for i in this_week_slots:
+        if i.date not in by_date:
+            by_date[i.date]=stat_occupied_or_not()
+        by_date[i.date].count+=1
+        by_date[i.date].occupied+=i.occupied
+        if i.staff not in by_staff:
+            by_staff[i.staff]=stat_occupied_or_not()
+        by_staff[i.staff].count+=1
+        by_staff[i.staff].occupied+=i.occupied
+    return str(by_date) + str(by_staff) + "\n" + str(day)
+            
+            
