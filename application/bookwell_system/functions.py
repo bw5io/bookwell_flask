@@ -1,5 +1,6 @@
 from flask import flash
 from wtforms.validators import ValidationError
+from datetime import datetime, timedelta
 
 def flash_errors(form):
     """
@@ -8,6 +9,11 @@ def flash_errors(form):
     for _, errors in form.errors.items():
         for error in errors:
             flash( (error), 'error')
+
+def get_week(date):
+    start_date = date - timedelta(days=date.weekday())
+    end_date = start_date + timedelta(days=6)
+    return start_date.date(), end_date.date()
 
 class Compare(object):  # --> Change to 'LessThan'
     """

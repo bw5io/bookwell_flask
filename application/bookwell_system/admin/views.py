@@ -1,3 +1,5 @@
+from datetime import datetime, timedelta
+from operator import and_
 from flask import render_template, redirect, request, url_for, flash
 from flask_login import login_user, logout_user, login_required, current_user
 
@@ -5,7 +7,7 @@ from . import admin
 from .. import db
 from ..models import SkillSet, Permission, TimeSlotInventory
 from .forms import *
-from ..functions import flash_errors
+from ..functions import flash_errors, get_week
 from ..decorators import permission_required
 
 
@@ -40,8 +42,10 @@ def skill_list_delete(id):
     print("Deleted.")
     return redirect(url_for('admin.skill_list_view'))
 
-# @admin.route('/dashboard')
-# @permission_required(Permission.ADMIN)
-# def dashboard_view():
-#     next_week_slots=TimeSlotInventory.query.filter()
-#     return None
+@admin.route('/dashboard')
+@permission_required(Permission.ADMIN)
+def dashboard_view():
+    day = datetime.now()+timedelta(days=7)
+    start_date, end_date = get_week(day)
+    this_week_slots=TimeSlotInventory.query.filter(and_(TimeSlotInventory.date>=start_date, TimeSlotInventory.date<= end_date))
+    return str([(i.staff, i.date, i.startTime) for i in this_week_slots.all()])
