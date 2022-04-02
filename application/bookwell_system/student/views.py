@@ -3,7 +3,7 @@ from flask_login import login_user, logout_user, login_required, current_user
 from is_safe_url import is_safe_url
 from flask import abort
 
-import datetime
+from datetime import datetime, timedelta
 
 from ..decorators import permission_required
 from . import student
@@ -31,7 +31,7 @@ def booking_step_2():
 def booking_step_3():
     skill_id = request.args.get("skill")
     staff_id = request.args.get("staff")
-    timeslots = TimeSlotInventory.query.filter_by(staff=staff_id, occupied=False).all()
+    timeslots = TimeSlotInventory.query.filter(TimeSlotInventory.staff==staff_id, TimeSlotInventory.occupied==False, TimeSlotInventory.date>(datetime.now()-timedelta(days=1)).date()).all()
     return render_template("/student/booking_3.html", timeslots=timeslots, skill=skill_id, staff=staff_id)
 
 @student.route("/booking/step4")
