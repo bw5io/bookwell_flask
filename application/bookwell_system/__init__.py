@@ -3,6 +3,8 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_migrate import Migrate
 from flask_bootstrap import Bootstrap5
+from flask_charts import GoogleCharts
+
 import os
 from dotenv import load_dotenv
 
@@ -15,9 +17,13 @@ app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URI")
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 bootstrap = Bootstrap5(app)
+charts = GoogleCharts(app)
+
 
 login_manager = LoginManager()
 login_manager.init_app(app)
+
+
 
 from .main import main as main_blueprint
 app.register_blueprint(main_blueprint)

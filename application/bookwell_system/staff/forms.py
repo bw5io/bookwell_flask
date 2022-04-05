@@ -1,8 +1,8 @@
 from flask_wtf import FlaskForm
 from flask_login import current_user
-from wtforms import StringField, PasswordField, SubmitField, TextAreaField, IntegerField
+from wtforms import SubmitField, IntegerField
 from wtforms.fields.html5 import DateField, TimeField
-from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError, Regexp, InputRequired
+from wtforms.validators import DataRequired, ValidationError
 from ..models import TimeSlotInventory
 from ..functions import Compare
 from flask import flash

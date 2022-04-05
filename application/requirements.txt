@@ -1,5 +1,6 @@
 alembic==1.7.5
 attrs==21.2.0
+Bootstrap-Flask==2.0.2
 cffi==1.15.0
 click==7.1.2
 cryptography==36.0.1
