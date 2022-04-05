@@ -12,4 +12,4 @@ from ..functions import get_week
 
 @main.route("/", methods=['GET','POST'])
 def home():
-    return str(get_week(datetime.now()))
+    return render_template("/main/index.html")
