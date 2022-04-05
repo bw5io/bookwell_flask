@@ -3,11 +3,11 @@
 
 <div>
     <h2>Meeting Detail</h2>
-    <table>
+    <table class="table">
 
         <tr>
             <td>Owner</td>
-            <td>{{meeting.ownerUser.first_name}}</td>
+            <td>{{meeting.ownerUser.last_name}}, {{meeting.ownerUser.first_name}}</td>
         </tr>
         <tr>
             <td>Date</td>
@@ -35,10 +35,12 @@
         </tr>
         <tr>
             <td>Staff</td>
-            <td>{{meeting.staffUser.first_name}}</td>
+            <td>{{meeting.ownerUser.last_name}}, {{meeting.staffUser.first_name}}</td>
         </tr>
         <tr>
-            <td><a href="{{url_for('student.booking_detail_edit', id=meeting.id)}}">Edit</a></td>
+            <td>
+                <button type="button" class="btn btn-primary btn-md" onClick="window.location.href='{{ url_for("student.booking_detail_edit", id=meeting.id) }}'">Edit</button>
+            </td>
             <td></td>
         </tr>
     </table>
