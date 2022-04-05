@@ -23,8 +23,14 @@ def booking_step_1():
 def booking_step_2():
     skill_id = request.args.get("skill")
     staff = SkillSet.query.get(skill_id).staff
+    qualified_staff = []
+    for i in staff:
+        print(i.staff)
+        timeslot = TimeSlotInventory.query.filter(TimeSlotInventory.staff==i.staff, TimeSlotInventory.occupied==False, TimeSlotInventory.date>(datetime.now()-timedelta(days=1)).date()).all()
+        if timeslot:
+            qualified_staff.append(i)   
     public_meeting = Meeting.query.filter_by(skill=skill_id, allowJoining=True).all()
-    return render_template("/student/booking_2.html", staff=staff, skill=skill_id, public_meeting=public_meeting)
+    return render_template("/student/booking_2.html", staff=qualified_staff, skill=skill_id, public_meeting=public_meeting)
 
 @student.route("/booking/step3")
 @permission_required(Permission.STUDENT)
