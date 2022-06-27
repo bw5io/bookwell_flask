@@ -38,10 +38,16 @@
             <td>{{meeting.ownerUser.last_name}}, {{meeting.staffUser.first_name}}</td>
         </tr>
         <tr>
+            <td>Actual Time</td>
             <td>
-                <button type="button" class="btn btn-primary btn-md" onClick="window.location.href='{{ url_for("student.booking_detail_edit", id=meeting.id) }}'">Edit</button>
+                {{meeting.actualTime}}
+                {{ render_form(form, action=url_for('staff.timeslot_actual_time_input', id=id)) }}
+                <form action="{{url_for('staff.timeslot_actual_time_input', id=id)}}" method="post">
+                    {{form.csrf_token}}
+                    {{form.actual_time}}
+                    {{form.submit}}
+                </form>
             </td>
-            <td></td>
         </tr>
     </table>
 </div>
